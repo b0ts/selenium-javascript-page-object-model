@@ -1,0 +1,11 @@
+{
+  "name": "selenium-javascript-page-object-model",
+  "private": true,
+  "scripts": {
+    "test": "mocha 'test/use_case/*.js' --timeout 20000",
+    "test-debug": "mocha --debug 'test/use_case/*.js' --timeout 20000"
+  },
+  "dependencies": {
+    "selenium-webdriver": "^3.6.0"
+  }
+}
