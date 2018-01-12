@@ -6,21 +6,32 @@ const HomePage = require('../../lib/pages/home-page');
 const ContactPage = require('../../lib/pages/contact-page');
 const ThankYouPage = require('../../lib/pages/thank-you-page');
 
-const By = webdriver.By;       // DRY
-const until = webdriver.until;
-
 // The pref exposes console errors to the tests
-const pref = new webdriver.logging.Preferences(); 
+const pref = new webdriver.logging.Preferences();
+
+// run locally
 const driver = new webdriver.Builder()
-    .forBrowser('chrome')
-    .setLoggingPrefs(pref)
-    .build();
+  .forBrowser('chrome')
+  .setLoggingPrefs(pref)
+  .build();
+
+// const driver = new webdriver.Builder()
+//   .forBrowser('chrome', '', 'MAC')
+//   .usingServer('http://192.168.0.144:4444/wd/hub')
+//   .setLoggingPrefs(pref)
+//   .build();
+
+// const driver = new webdriver.Builder()
+//   .forBrowser('chrome', '', 'WINDOWS')
+//   .usingServer('http://192.168.0.144:4444/wd/hub')
+//   .setLoggingPrefs(pref)
+//   .build();
 
 describe('Menu Navigation Test', () => {
-  process.on('unhandledRejection', error => {
-    throw(error); // promote promise warning to mocha error
+  process.on('unhandledRejection', (error) => {
+    throw (error); // promote promise warning to mocha error
   });
-  
+
   before(async () => {
     this.homePage = new HomePage(webdriver, driver);
     this.contactPage = new ContactPage(webdriver, driver);
@@ -28,28 +39,25 @@ describe('Menu Navigation Test', () => {
   });
 
   it('Use case - sls website menu navigation test', async () => {
-    console.log('* Start of sls website menu navigation test');
-    
-    console.log('- Home Page');
+    this.homePage.log('* Start of sls website menu navigation test using grid');
+
+    this.homePage.log('- Home Page');
     await this.homePage.navigateToArticle();
 
-    console.log('- Contact Page');
+    this.homePage.log('- Contact Page');
     await this.homePage.menu.clickContactMenuItem();
     await this.contactPage.waitForArticle();
 
-    console.log('- Thank You Page');
+    this.contactPage.log('- Thank You Page');
     await this.contactPage.menu.clickThankYouMenuItem();
-    await this.thankYouPage.waitForArticle(); 
+    await this.thankYouPage.waitForArticle();
 
-    console.log('- Back to Home Page');
+    this.contactPage.log('- Back to Home Page');
     await this.thankYouPage.menu.clickHomeMenuItem();
     await this.homePage.waitForArticle();
 
-    console.log('- Checking Webdriver logs');
+    this.homePage.log('- Checking Webdriver logs');
     await this.homePage.dumpWebDriverLogs();
-
-  }); 
-
-  after(async () => await driver.quit() );
-
+  });
+  after(async () => driver.quit());
 });
